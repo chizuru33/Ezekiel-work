@@ -12,7 +12,6 @@ import numpy as np
 # ============================================================
 
 def send_sms(phone_number, message):
-def send_sms(phone_number, message):
 
     api_key = st.secrets["TERMII_API_KEY"]
 
@@ -41,7 +40,6 @@ def send_sms(phone_number, message):
 
     except Exception as e:
         return False, str(e)
-
 # ============================================================
 # PAGE: RISK ASSESSMENT
 # ============================================================
