@@ -12,6 +12,7 @@ import numpy as np
 # ============================================================
 
 def send_sms(phone_number, message):
+def send_sms(phone_number, message):
 
     api_key = st.secrets["TERMII_API_KEY"]
 
@@ -27,7 +28,6 @@ def send_sms(phone_number, message):
     }
 
     try:
-
         response = requests.post(
             url,
             json=payload,
@@ -40,9 +40,7 @@ def send_sms(phone_number, message):
         return False, response.text
 
     except Exception as e:
-
         return False, str(e)
-
 
 # ============================================================
 # PAGE: RISK ASSESSMENT
@@ -225,15 +223,15 @@ elif nav == "🔍 Risk Assessment":
 
         st.markdown("### 📱 SMS Alert Information")
 
-        community_name = st.text_input(
-            "Community / LGA Name",
-            placeholder="Example: Bauchi LGA"
-        )
+community_name = st.text_input(
+    "Community / LGA Name",
+    placeholder="Example: Bauchi LGA"
+)
 
-        phone_number = st.text_input(
-            "Health Authority Phone Number",
-            placeholder="Example: 2348012345678"
-        )
+phone_number = st.text_input(
+    "Health Authority Phone Number",
+    placeholder="2348129506320"
+)
 
 
         # ----------------------------------------------------
@@ -330,10 +328,50 @@ elif nav == "🔍 Risk Assessment":
         )[0]
 
 
-        confidence = (
-            proba_list[pred_idx] * 100
-        )
+        confidence = proba_list[pred_idx] * 100
 
+if risk_output.lower() == "high":
+
+    st.warning(
+        "⚠️ HIGH RISK DETECTED"
+    )
+
+    if st.button("📲 Send SMS Alert"):
+
+        if not community_name or not phone_number:
+
+            st.error(
+                "Please enter the Community/LGA "
+                "and phone number."
+            )
+
+        else:
+
+            message = (
+                "CHOLERA EARLY WARNING: "
+                f"High environmental risk detected "
+                f"in {community_name}. "
+                f"Risk confidence: {confidence:.1f}%. "
+                "Please investigate and take "
+                "appropriate public-health action."
+            )
+
+            success, result = send_sms(
+                phone_number,
+                message
+            )
+
+            if success:
+
+                st.success(
+                    "✅ SMS alert sent successfully."
+                )
+
+            else:
+
+                st.error(
+                    f"❌ SMS failed: {result}"
+                )
 
         # ----------------------------------------------------
         # DISPLAY RISK
